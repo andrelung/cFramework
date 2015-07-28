@@ -12,13 +12,13 @@
  * mutable pre-ES5.
  */
 
-(function(gsheets, $, undefined) {
+(function (gsheets, $, undefined) {
     'use strict';
 
     /**
      * Logging function, for debugging mode
      */
-    $.log = function(message) {
+    $.log = function (message) {
         if (gsheets.config.debug && (typeof window.console !== 'undefined' && typeof window.console.log !== 'undefined') && console.debug) {
             console.debug(message);
         }
@@ -57,10 +57,6 @@
      *      return 'My name is ' + name + ', I am ' + age + ' old.';
      *  };
      */
-    /*
-
-
-
 
     /**
      * Public methods and properties, e.g.
@@ -91,23 +87,6 @@
             /* Store this to avoid scope conflicts */
 
             /*
-             * Return the URI of site
-             * Return protocol, hostname and port if found
-             *
-            */
-            this.getDomain = function () {
-                var port = "",
-                    url = "";
-
-                if (window.location.port) {
-                    port = ":" + window.location.port;
-                }
-                url = window.location.protocol + "//" + window.location.hostname + port + "/";
-                return url;
-            };
-
-
-            /*
              * Sub-Functions, call with "gsheets.subHelper.function()" eg.
              *  this.shout = function (example) {
              *      return example.toUpperCase();
@@ -116,11 +95,12 @@
 
 
             /**
-             * Init
+             * Initialize the object
              */
             this.init = function() {
-                _this.getDomain();
-                return this; /*this refer to gsheets.subHelper*/
+                //do everything which needs to be done for init, eg
+                //_this.getDomain();
+                return this; /*this refers to gsheets.subHelper*/
             };
 
             return this.init(); /*initialize the init()*/

@@ -4,7 +4,7 @@
  * Author - Mohammed Arif
  */
 
-/* JSB (our namespace name) and undefined are passed here
+/* gsheets (our namespace name) and undefined are passed here
  * to ensure 1. namespace can be modified locally and isn't
  * overwritten outside of our function context
  * 2. the value of undefined is guaranteed as being truly
@@ -12,14 +12,14 @@
  * mutable pre-ES5.
  */
 
-(function(JSB, $, undefined) {
+(function(gsheets, $, undefined) {
     'use strict';
 
     /**
      * Logging function, for debugging mode
      */
     $.log = function(message) {
-        if (JSB.config.debug && (typeof window.console !== 'undefined' && typeof window.console.log !== 'undefined') && console.debug) {
+        if (gsheets.config.debug && (typeof window.console !== 'undefined' && typeof window.console.log !== 'undefined') && console.debug) {
             console.debug(message);
         }
         /*else {
@@ -45,7 +45,6 @@
         };
     }(this));
 
-
     /**
      * Private properties, eg.
      *  var name = 'bla',
@@ -58,14 +57,15 @@
      *      return 'My name is ' + name + ', I am ' + age + ' old.';
      *  };
      */
+    /*
 
 
 
 
     /**
      * Public methods and properties, e.g.
-     *  JSB.title = 'Interactive Developer';
-     *  JSB.sayHello = function() {
+     *  gsheets.title = 'Interactive Developer';
+     *  gsheets.sayHello = function() {
      *      return "Hello World!";
      *  };
      */
@@ -78,7 +78,7 @@
      * It is possible to put parentheses around this structure to instantiate it immediately after it's parsed.
      * This way it's always present when the script is executed and doesn't have to be instantiated separately.
      */
-    JSB.subHelper = (function() {
+    gsheets.subHelper = (function() {
         function _subHelper() {
 
             /**
@@ -91,12 +91,28 @@
             /* Store this to avoid scope conflicts */
 
             /*
-             * Sub-Functions, call with "JSB.subHelper.function()" eg.
+             * Return the URI of site
+             * Return protocol, hostname and port if found
+             *
+            */
+            this.getDomain = function () {
+                var port = "",
+                    url = "";
+
+                if (window.location.port) {
+                    port = ":" + window.location.port;
+                }
+                url = window.location.protocol + "//" + window.location.hostname + port + "/";
+                return url;
+            };
+
+
+            /*
+             * Sub-Functions, call with "gsheets.subHelper.function()" eg.
              *  this.shout = function (example) {
              *      return example.toUpperCase();
              *  };
             */
-
 
 
             /**
@@ -104,7 +120,7 @@
              */
             this.init = function() {
                 _this.getDomain();
-                return this; /*this refer to JSB.subHelper*/
+                return this; /*this refer to gsheets.subHelper*/
             };
 
             return this.init(); /*initialize the init()*/
@@ -113,6 +129,6 @@
     }());
 
     /**
-     * Check to evaluate whether 'JSB' exists in the global namespace - if not, assign window.JSB an object literal
+     * Check to evaluate whether 'gsheets' exists in the global namespace - if not, assign window.gsheets an object literal
      */
-}(window.JSB = window.JSB || {}, jQuery));
+}(window.gsheets = window.gsheets || {}, jQuery));

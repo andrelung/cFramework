@@ -13,9 +13,9 @@
   * Any value that may change in the future
   */
 
-(function (JSB, $, undefined) {
+(function (gsheets, $, undefined) {
 
-	JSB.config = {
+	gsheets.config = {
 		language: 'english',
         debug: true,
 		appId: '150352665021939',
@@ -27,6 +27,6 @@
 	};
 
 /**
- * Check to evaluate whether 'JSB' exists in the global namespace - if not, assign window.JSB an object literal.
+ * Check to evaluate whether 'gsheets' exists in the global namespace - if not, assign window.gsheets an object literal.
  */
-}(window.JSB = window.JSB || {}, jQuery));
+}(window.gsheets = window.gsheets || {}, jQuery));

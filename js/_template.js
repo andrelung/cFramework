@@ -7,7 +7,7 @@
  */
 
 
-/* parser (function namespace name) and undefined are passed here
+/* renameMe (function namespace name) and undefined are passed here
  * to ensure 1. namespace can be modified locally and isn't
  * overwritten outside of our function context
  * 2. the value of undefined is guaranteed as being truly
@@ -15,7 +15,7 @@
  * mutable pre-ES5.
  */
 
-(function (parser, $, undefined) {
+(function (renameMe, $, undefined) {
     'use strict';
 
 /**
@@ -50,8 +50,8 @@
 
 /**
  * Public methods and properties, e.g.
- *  parser.title = 'Interactive Developer';
- *  parser.sayHello = function() {
+ *  renameMe.title = 'Interactive Developer';
+ *  renameMe.sayHello = function() {
  *      return "Hello World!";
  *  };
  */
@@ -65,7 +65,7 @@
  * It is possible to put parentheses around this structure to instantiate it immediately after it's parsed.
  * This way it's always present when the script is executed and doesn't have to be instantiated separately.
  */
-    parser.subHelper = (function() {
+    renameMe.subHelper = (function() {
         function _subHelper() {
 
             /**
@@ -75,7 +75,7 @@
             /*jshint validthis: true */
 
         /*
-         * Sub-Functions, call with "parser.subHelper.function()" eg.
+         * Sub-Functions, call with "renameMe.subHelper.function()" eg.
          *  this.shout = function (example) {
          *      return example.toUpperCase();
          *  };
@@ -88,7 +88,7 @@
             this.init = function() {
                 //do everything which needs to be done for init, eg
                 //_this.getDomain();
-                return this; /*this refers to parser.subHelper*/
+                return this; /*this refers to renameMe.subHelper*/
             };
             return this.init(); /*initialize the init()*/
         }
@@ -96,6 +96,6 @@
     }());
 
 /**
- * Check to evaluate whether 'parser' exists in the global namespace - if not, assign window.parser an object literal
+ * Check to evaluate whether 'renameMe' exists in the global namespace - if not, assign window.renameMe an object literal
  */
-}(window.parser = window.parser || {}, jQuery));
+}(window.renameMe = window.renameMe || {}, jQuery));

@@ -13,20 +13,16 @@
   * Any value that may change in the future
   */
 
-(function (gsheets, $, undefined) {
+(function (AbilityLoft, $, undefined) {
 
-	gsheets.config = {
-		language: 'english',
-        debug: true,
-		appId: '150352665021939',
-		urls : {
-			"404" : "404.html",
-			"500" : "500.html",
-			homepage : 'index.html'
-		}
-	};
+	AbilityLoft.config = {
+        debug : true,
+        idFieldName : 'ID',
+        titleFieldName : 'Titel',
+        dependencyFieldName : 'ThematischeAbhängigkeit'
+    };
 
 /**
- * Check to evaluate whether 'gsheets' exists in the global namespace - if not, assign window.gsheets an object literal.
+ * Check to evaluate whether 'AbilityLoft' exists in the global namespace - if not, assign window.AbilityLoft an object literal.
  */
-}(window.gsheets = window.gsheets || {}, jQuery));
+}(window.AbilityLoft = window.AbilityLoft || {}, jQuery));

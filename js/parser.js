@@ -62,7 +62,7 @@ var contentGraphPublic;
      */
     var generateUUID = function () {
         var d = new Date().getTime();
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var uuid = 'edxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -173,15 +173,19 @@ var contentGraphPublic;
 
 
         do {
-            console.log("---Current Level: " + currentLevel + "---");
-            console.log("NodesToDo: " + nodesToDo.toString());
+            if (AbilityLoft.config.debug){
+                console.log("---Current Level: " + currentLevel + "---");
+                console.log("NodesToDo: " + nodesToDo.toString());
+            }
 
             currentLevel++;
             nodesNextLevel = [];
 
             while (nodesToDo.length > 0) {
                 currentNode = nodesToDo.pop();
-                console.log("popping " + currentNode);
+                if (AbilityLoft.config.debug){
+                    console.log("popping " + currentNode);
+                }
                 if (currentLevel === 100) {
                     console.warn("Level calculation exceeded 1000, removing nodeToDo");
                     nodesNextLevel = [];
@@ -203,7 +207,9 @@ var contentGraphPublic;
                             dataGraph.node(successors[j]).graphPredecessors.push(currentNode);
 
                             nodesNextLevel.push(successors[j]);
-                            console.log("pushing " + successors[j]);
+                            if (AbilityLoft.config.debug){
+                                console.log("pushing " + successors[j]);
+                            }
                         }
                     }
                 }

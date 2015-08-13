@@ -16,7 +16,7 @@
 (function (AbilityLoft, $, undefined) {
 
 	AbilityLoft.config = {
-        debug : true,
+        debug : false,
         idFieldName : 'ID',
         titleFieldName : 'Titel',
         dependencyFieldName : 'ThematischeAbhängigkeit'

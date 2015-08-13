@@ -1,6 +1,6 @@
 /*global $, vis, importer, parser */
 
-$("#nodeCanvas").height($(document).height() - 16);
+
 
 function getAttributeFromDot(node, attribute) {
     var returnValue; // = undefined;
@@ -20,6 +20,7 @@ function getAttributeFromDot(node, attribute) {
 }
 
 function visualize(url) {
+    $("#nodeCanvas").height($(document).height() - 16);
     importer.loadData(url, function (gdata) {
         var dotdata = parser.parseToDOT(gdata);
 
@@ -93,4 +94,5 @@ function visualize(url) {
         });
 
     });
+
 }

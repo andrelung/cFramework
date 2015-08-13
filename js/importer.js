@@ -72,7 +72,7 @@
                     for (i = 1; i < response.rows.length; i++) { //start with 1 to skip header
 
                         responseObj.rows.push({
-                            id: response.rows[i].cells[AbilityLoft.config.iDFieldName],
+                            id: response.rows[i].cells[AbilityLoft.config.idFieldName],
                             title: response.rows[i].cells[AbilityLoft.config.titleFieldName],
                             dependencies: response.rows[i].cells[AbilityLoft.config.dependencyFieldName].split(";")
                         });

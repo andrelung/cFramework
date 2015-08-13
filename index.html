@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ContentFramework Dev</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="">
+
+    <style>
+        #eventDiv {
+            position: absolute;
+            border: 1px black solid;
+            right: 10px;
+            top: 10px;
+            padding: 2px;
+            background-color: rgba(10, 232, 27, 0.43);
+        }
+        #eventDiv > h2 {
+            margin-top: 0;
+            text-align: right;
+        }
+    </style>
+
+
+    <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div id="nodeCanvas" class="my_element" style="height: 700px">
+
+    </div>
+    <div id="eventDiv">
+    </div>
+
+    <!-- JavaScript at the bottom for fast page loading -->
+    <script src="js/libs/jquery-2.1.4.min.js"></script>
+    <script src="js/libs/vis/vis.min.js"></script>
+
+    <script src="js/config.js"></script>
+
+    <script src="js/libs/sheetrock-1.0.0.min.js"></script>
+    <script src="js/importer.js"></script>
+
+    <script src="js/libs/graphlib.min.js"></script>
+    <script src="js/parser.js"></script>
+
+
+    <script>
+        $("#nodeCanvas").height($(document).height() -16);
+
+        function getAttributeFromDot(node, attribute){
+            var returnValue = undefined;
+            if (node.hasOwnProperty("comment")) {
+                var attributeField = node.comment;
+                var attributeArray = attributeField.split(";");
+/*              console.log(node);
+                console.log(attributeArray[0]);
+                if (node.label === " Tabs") debugger; */
+                switch (attribute) {
+                    case "level":
+                        returnValue = parseInt(attributeArray[0])
+                        break;
+                }
+            }
+            return returnValue;
+        }
+
+
+        var gresponse = importer.loadData("https://docs.google.com/spreadsheets/d/1WuL0m_ltFu-Xeo7da2EvOEF-cfRenbhTR6jt1xWLVbM/edit#gid=0", function(data){
+            var dotdata = parser.parseToDOT(data);
+
+            var container = document.getElementById('nodeCanvas');
+            var data = vis.network.convertDot(dotdata);
+
+
+
+
+            if (data.nodeHash === undefined) {
+                var hashToBuild = {};
+                var oneNode;
+
+                for (var i = 0; i < data.nodes.length; i++) {
+                    oneNode = data.nodes[i];
+                    hashToBuild[oneNode.id] = oneNode;
+                    hashToBuild[oneNode.id]["level"] = getAttributeFromDot(oneNode, "level");
+                }
+                data.nodeHash = hashToBuild;
+            }
+
+            var options = {
+                nodes:{
+                    borderWidth: 1,
+                    borderWidthSelected: undefined,
+                    brokenImage:undefined,
+                    color: {
+                      highlight: {
+                        border: '#049a21',
+                        background: '#40eb61'
+                      },
+                      hover: {
+                        border: '#2B7CE9',
+                        background: '#D2E5FF'
+                      }
+                    },
+                    shape: 'box'
+
+                },
+                layout: {
+                    randomSeed: undefined,
+                    hierarchical: {
+                      enabled:true,
+                      levelSeparation: 150,
+                      direction: 'LR',   // UD, DU, LR, RL
+                      sortMethod: 'directed' // hubsize, directed
+                    }
+                  }
+            }
+
+            var network = new vis.Network(container, data, options);
+
+
+
+
+            network.on("click", function (params) {
+                if (typeof params.nodes[0] !== "undefined") {
+
+                    var selectedNode = data.nodeHash[params.nodes[0]];
+
+                    var nodeData = ""
+                    for (var property in selectedNode) {
+                        if (selectedNode.hasOwnProperty(property)) {
+                            nodeData += '<p><b>' + property + ':</b> '+selectedNode[property].toString() + "</p>\n";
+                        }
+                    }
+
+                    document.getElementById('eventDiv').innerHTML = '<h2>[Debug info]</h2>' +
+                        nodeData;
+                }
+            });
+
+        });
+    </script>
+    <!-- endbuild -->
+
+</body>
+</html>

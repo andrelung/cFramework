@@ -54,7 +54,12 @@
 
 
     <script>
-        visualize("https://docs.google.com/spreadsheets/d/1WuL0m_ltFu-Xeo7da2EvOEF-cfRenbhTR6jt1xWLVbM/edit#gid=0");
+        //visualize("https://docs.google.com/spreadsheets/d/1WuL0m_ltFu-Xeo7da2EvOEF-cfRenbhTR6jt1xWLVbM/edit#gid=0");
+        importer.loadData("https://docs.google.com/spreadsheets/d/1WuL0m_ltFu-Xeo7da2EvOEF-cfRenbhTR6jt1xWLVbM/edit#gid=0", function (gdata) {
+
+            var graph = parser.getContentGraph(gdata);
+            debugger
+        });
     </script>
     <!-- endbuild -->
 

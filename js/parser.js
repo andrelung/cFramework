@@ -18,9 +18,9 @@ var contentGraphPublic;
 (function (parser, $) {
     'use strict';
 
-/**
- * Logging function, for debugging mode
- */
+    /**
+     * Logging function, for debugging mode
+     */
     $.log = function (message) {
         if (AbilityLoft.config.debug && (typeof window.console !== 'undefined' && typeof window.console.log !== 'undefined') && console.debug) {
             console.debug(message);
@@ -30,11 +30,11 @@ var contentGraphPublic;
         }*/
     };
 
-/**
- * Private properties, eg.
- *  var name = 'bla',
- *      age = 30;
- */
+    /**
+     * Private properties, eg.
+     *  var name = 'bla',
+     *      age = 30;
+     */
     var currentNode,
         currentDependency,
         currentDependencyArray,
@@ -42,13 +42,13 @@ var contentGraphPublic;
         uuid;
 
 
-/**
- * Private methods, e.g.
- *  var getName = function() {
- *      return 'My name is ' + name + ', I am ' + age + ' old.';
- *  };
- */
-    var getUUID = function(nodeName) {
+    /**
+     * Private methods, e.g.
+     *  var getName = function() {
+     *      return 'My name is ' + name + ', I am ' + age + ' old.';
+     *  };
+     */
+    var getUUID = function (nodeName) {
         if (assignedUuids[nodeName] === undefined) {
             assignedUuids[nodeName] = generateUUID();
         }
@@ -60,15 +60,15 @@ var contentGraphPublic;
      * [[Description]]
      * @returns {[[Type]]} [[Description]]
      */
-    var generateUUID = function(){
+    var generateUUID = function () {
         var d = new Date().getTime();
-        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            var r = (d + Math.random() * 16 ) % 16 | 0;
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
-            return (c==='x' ? r : (r&0x3|0x8)).toString(16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
 
-        if (assignedUuids[uuid] === undefined) {//check if unique
+        if (assignedUuids[uuid] === undefined) { //check if unique
             assignedUuids[uuid] = true;
         } else { //(recursively) get a new one
             assignedUuids = parser.subHelper.generateUUID();
@@ -76,19 +76,19 @@ var contentGraphPublic;
         return uuid;
     };
 
-    var getDot = function(dataGraph) {
+    var getDot = function (dataGraph) {
 
         var label,
-            dot =   "strict digraph { \n"+
-                    "rankdir = LR;\n"+
-                    "//comment is a datafield with the following specification: 'level [;otherattributes]'\n";
+            dot = "strict digraph { \n" +
+            "rankdir = LR;\n" +
+            "//comment is a datafield with the following specification: 'level [;otherattributes]'\n";
 
-        dataGraph.nodes().map(function(oneNode){
-                label = dataGraph.node(oneNode).label.replace(/\"/g,'\''); //TODO more robust, please.
-                dot += '\t"' +oneNode+'" [label="'+label+'", comment="'+dataGraph.node(oneNode).level+';0;0", ' + getNodeDotStyle(dataGraph.node(oneNode)) + ']\n';
-            });
-        dataGraph.edges().map(function(oneEdge) {
-            dot += "\t\"" +oneEdge.v +"\" -> \"" + oneEdge.w + "\"\n";
+        dataGraph.nodes().map(function (oneNode) {
+            label = dataGraph.node(oneNode).label.replace(/\"/g, '\''); //TODO more robust, please.
+            dot += '\t"' + oneNode + '" [label="' + label + '", comment="' + dataGraph.node(oneNode).level + ';0;0", ' + getNodeDotStyle(dataGraph.node(oneNode)) + ']\n';
+        });
+        dataGraph.edges().map(function (oneEdge) {
+            dot += "\t\"" + oneEdge.v + "\" -> \"" + oneEdge.w + "\"\n";
         });
         dot += getRanks(dataGraph);
         dot += "}";
@@ -96,39 +96,39 @@ var contentGraphPublic;
         return dot;
     };
 
-    var getNodeDotStyle = function(node) {
-        var borderColor = '#2B7CE9';            //default
-        var backgroundColor = '#97C2FC';        //default
+    var getNodeDotStyle = function (node) {
+        var borderColor = '#2B7CE9'; //default
+        var backgroundColor = '#97C2FC'; //default
         //var highlightBorder = '#049a21';        //default
         //var highlightBackground = '#40eb61';    //default
         //var hoverBorder = '#2B7CE9';            //default
         //var hoverBackground = '#D2E5FF';        //default
 
-        switch(node.type) {
-            case "externalDependency":
-                borderColor = '#ffa500';
-                backgroundColor = '#ffbc41';
-                break;
-            case "inactive":
-                borderColor = '#5a5a5a';
-                backgroundColor = '#cccccc';
-                break;
+        switch (node.type) {
+        case "externalDependency":
+            borderColor = '#ffa500';
+            backgroundColor = '#ffbc41';
+            break;
+        case "inactive":
+            borderColor = '#5a5a5a';
+            backgroundColor = '#cccccc';
+            break;
         }
 
-        return 'color="'+backgroundColor+'"';
+        return 'color="' + backgroundColor + '"';
     };
 
-    var getRanks = function(sourceGraph){
+    var getRanks = function (sourceGraph) {
         var nodeId,
             nodeLevel,
             i,
             nodesOnLevel = {},
             ranks = "";
 
-        for (i=0; i < sourceGraph.nodes().length; i++) {
+        for (i = 0; i < sourceGraph.nodes().length; i++) {
             nodeId = sourceGraph.nodes()[i]; //TODO this could perform a lot faster... but i don't get it right now
             nodeLevel = sourceGraph.node(nodeId).level;
-            if (nodesOnLevel[nodeLevel]===undefined) {
+            if (nodesOnLevel[nodeLevel] === undefined) {
                 nodesOnLevel[nodeLevel] = [];
             }
             nodesOnLevel[nodeLevel].push(nodeId);
@@ -145,7 +145,7 @@ var contentGraphPublic;
         return ranks;
     };
 
-    var setNodeLevels = function(dataGraph) {
+    var setNodeLevels = function (dataGraph) {
         var allNodes = dataGraph.nodes(),
             currentNode,
             currentLevel = 1,
@@ -192,8 +192,8 @@ var contentGraphPublic;
                 dataGraph.node(currentNode).level = currentLevel;
 
                 successors = dataGraph.successors(currentNode);
-                if (successors.length > 0) {//add successors
-                    for (j=0; j < successors.length; j++) {
+                if (successors.length > 0) { //add successors
+                    for (j = 0; j < successors.length; j++) {
                         if (nodesNextLevel.indexOf(successors[j]) < 0) { //don't add dupplicates
 
                             //create reference to modules which are already in graph
@@ -216,14 +216,21 @@ var contentGraphPublic;
 
     };
 
-/**
- * Public methods and properties, e.g.
- *  parser.title = 'Interactive Developer';
- *  parser.sayHello = function() {
- *      return "Hello World!";
- *  };
- */
-    parser.parseToDOT = function(rawData) {
+    /**
+     * Public methods and properties, e.g.
+     *  parser.title = 'Interactive Developer';
+     *  parser.sayHello = function() {
+     *      return "Hello World!";
+     *  };
+     */
+    parser.parseToDOT = function (rawData) {
+        var cGraph = parser.getContentGraph(rawData);
+        var dotData = getDot(cGraph);
+
+        return dotData;
+    };
+
+    parser.getContentGraph = function(rawData) {
         var i,
             j,
             options = { //TODO: Do we need this?
@@ -235,7 +242,7 @@ var contentGraphPublic;
         for (i = 0; i < rawData.rows.length; i++) { //1st run: nodes
             contentGraph.setNode(rawData.rows[i].id, {
                 'label': rawData.rows[i].title,
-                'type' : 'standard'
+                'type': 'standard'
             });
         }
 
@@ -244,52 +251,46 @@ var contentGraphPublic;
             currentDependencyArray = rawData.rows[i].dependencies;
 
             if (currentDependencyArray.length > 0) { //-> is array and contains dependencies
-                for (j=0; j < currentDependencyArray.length; j++) { //get 'em all :-)
+                for (j = 0; j < currentDependencyArray.length; j++) { //get 'em all :-)
                     currentDependency = rawData.rows[i].dependencies[j];
                     if (currentDependency === "") {
                         continue;
                     }
-                    if (parser.subHelper.isIdValue(currentDependency)) {     //does it refer to an ID?
+                    if (parser.subHelper.isIdValue(currentDependency)) { //does it refer to an ID?
                         contentGraph.setEdge(
-                            currentDependency,    //from dependency
-                            currentNode.id           //to current node
+                            currentDependency, //from dependency
+                            currentNode.id //to current node
                         );
-                    } else {    //it must be an external reference
+                    } else { //it must be an external reference
                         uuid = getUUID(currentDependency);
                         contentGraph.setNode(uuid, {
                             'label': currentDependency,
                             'type': 'externalDependency'
                         });
                         contentGraph.setEdge(
-                            uuid,               //from newly created node
-                            currentNode.id         //to current node
+                            uuid, //from newly created node
+                            currentNode.id //to current node
                         );
                     }
                 }
             } else {
-                console.log("node " + rawData[i].id + " (id: " + rawData[i].title +") has no dependencies.");
+                console.log("node " + rawData[i].id + " (id: " + rawData[i].title + ") has no dependencies.");
             }
         }
 
         setNodeLevels(contentGraph);
 
-        if (AbilityLoft.config.debug) {
-            contentGraphPublic = contentGraph;
-        }
-
-        return getDot(contentGraph);
+        return contentGraph;
     };
 
-
-
-/*
- * Singletons serve as a namespace provider which isolate implementation code
- * from the global namespace so as to provide a single point of access for functions,
- * this is useful for organizing code into logical sections.
- * It is possible to put parentheses around this structure to instantiate it immediately after it's parsed.
- * This way it's always present when the script is executed and doesn't have to be instantiated separately.
- */
-    parser.subHelper = (function() {
+    /*
+     * Singletons serve as a namespace provider which isolate implementation code
+     * from the global namespace so as to provide a single point of access for functions,
+     * this is useful for organizing code into logical sections.
+     * It is possible to put parentheses around this structure to instantiate it immediately after it's parsed.
+     * This way it's always present when the script is executed and doesn't have to be instantiated separately.
+     */
+    parser.subHelper = (function () {
         function _subHelper() {
 
             /**
@@ -298,20 +299,22 @@ var contentGraphPublic;
              */
             /*jshint validthis: true */
 
-        /*
-         * Sub-Functions, call with "parser.subHelper.function()" eg.
-         *  this.shout = function (example) {
-         *      return example.toUpperCase();
-         *  };
-        */
-            this.isIdValue = function(value) {
-                return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value)); //http://stackoverflow.com/a/14794066
+            /*
+             * Sub-Functions, call with "parser.subHelper.function()" eg.
+             *  this.shout = function (example) {
+             *      return example.toUpperCase();
+             *  };
+             */
+            this.isIdValue = function (value) {
+                return !isNaN(value) && (function (x) {
+                    return (x | 0) === x;
+                })(parseFloat(value)); //http://stackoverflow.com/a/14794066
             };
 
             /**
              * Initialize the object
              */
-            this.init = function() {
+            this.init = function () {
                 //do everything which needs to be done for init, eg
                 //_this.getDomain();
 
@@ -322,7 +325,7 @@ var contentGraphPublic;
         return new _subHelper(); /*creating a new object of subHelper rather then a funtion*/
     }());
 
-/**
- * Check to evaluate whether 'parser' exists in the global namespace - if not, assign window.parser an object literal
- */
+    /**
+     * Check to evaluate whether 'parser' exists in the global namespace - if not, assign window.parser an object literal
+     */
 }(window.parser = window.parser || {}, jQuery));

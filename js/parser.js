@@ -62,7 +62,8 @@ var contentGraphPublic;
      */
     var generateUUID = function () {
         var d = new Date().getTime();
-        var uuid = 'edxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        //var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) { shorten:
+        var uuid = 'ed_x-4xxx-yxxx'.replace(/[xy]/g, function (c) {
             var r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
             return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -169,7 +170,7 @@ var contentGraphPublic;
             if (predecessors.length === 0 && successors.length > 0) { //no dependency & being required -> work with that
                 nodesToDo.push(currentNode); //these are the starting points to traverse the graph
             }
-        }
+        } //TODO bad loop
 
 
         do {
@@ -222,6 +223,25 @@ var contentGraphPublic;
 
     };
 
+    var setCustomDatafields = function (dataGraph) {
+        dataGraph._customData = {};
+
+        var dataColumns = []; //TODO: this is incredibly slow...
+        for (var oneNode in dataGraph._nodes) {
+            if (dataGraph._nodes.hasOwnProperty(oneNode)) {
+                for (var oneProperty in dataGraph._nodes[oneNode]) {
+                    if (dataGraph._nodes[oneNode].hasOwnProperty(oneProperty)) {
+                        if (dataColumns.indexOf(oneProperty) < 0) {
+                            dataColumns.push(oneProperty);
+                        }
+                    }
+                }
+
+            }
+        }
+        dataGraph._customData.dataColumns = dataColumns;
+    };
+
     /**
      * Public methods and properties, e.g.
      *  parser.title = 'Interactive Developer';
@@ -247,11 +267,11 @@ var contentGraphPublic;
 
         for (i = 0; i < rawData.rows.length; i++) { //1st run: nodes
             contentGraph.setNode(rawData.rows[i].id, {
+                'id': rawData.rows[i].id,
                 'label': rawData.rows[i].title,
                 'type': 'standard'
             });
         }
-
         for (i = 0; i < rawData.rows.length; i++) { //2nd run: edges
             currentNode = rawData.rows[i];
             currentDependencyArray = rawData.rows[i].dependencies;
@@ -270,6 +290,7 @@ var contentGraphPublic;
                     } else { //it must be an external reference
                         uuid = getUUID(currentDependency);
                         contentGraph.setNode(uuid, {
+                            'id': uuid,
                             'label': currentDependency,
                             'type': 'externalDependency'
                         });
@@ -285,6 +306,7 @@ var contentGraphPublic;
         }
 
         setNodeLevels(contentGraph);
+        setCustomDatafields(contentGraph);
 
         return contentGraph;
     };
